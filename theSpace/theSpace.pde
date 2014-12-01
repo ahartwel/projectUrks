@@ -11,9 +11,9 @@ import ddf.minim.*;
  float boxCount = sq(numOfBoxes);
   float boxW;
   float boxH;
-
+PImage cement;
  SyphonClient client;
-  PGraphics canvas;
+  PGraphics canvas, canvas2, cementGrid;
    
 //Movie myMovie;
   Camera cam;
@@ -40,6 +40,10 @@ void setup() {
  size(1600,1024,P3D);
 background(0);
   
+  cement = loadImage("cement.jpeg");
+  
+  canvas = createGraphics(width, height, P3D);
+  
   client = new SyphonClient(this, "", "Processing");
   
   cam = new Camera();
@@ -48,24 +52,97 @@ background(0);
   boxW = width/numOfBoxes;
   boxH = height/numOfBoxes;
 
+cementGrid = createGraphics(300,500, P3D);
 
+  cementGrid.beginDraw();
+    
+    int x = 0;
+    int y = 0;
+    int h = cementGrid.height/10;
+    int w = cementGrid.width/10;
+    while(y<cementGrid.height) {
+     cementGrid.image(cement,x,y, w, h);
+    x+=w;
+   
+   if (x>=cementGrid.width) {
+    x=0;
+    y+=h;
+   } 
+      
+    }
+
+    cementGrid.endDraw();
 
  walls = new ArrayList<Wall>();
- walls.add( new Wall(width*3, height*3, 
+
+ walls.add( new Wall(width*2.5, height*2, //left wall 
  0,0,0, 
- 0, .5 * height, -width*1.5, 
- 90,0, 0) );
+ -2.5*width, 0, 1.5*width, 
+ 0,90, 0, true) );
  
- walls.add(new Wall(width*2, height*3,
+  walls.add( new Wall(width*2.5, height*2,  //left wall 2
+ 0,0,0, 
+ -2.5*width, 0, -1.5*width, 
+ 0,90, 0, true) );
+ 
+ 
+ 
+ walls.add(new Wall(width*5, height*2, //back wall
  0,0,0,
- width, .5 * height, -1 * walls.get(0).actualWidth(),
- 0,0,0
+ 0, 0, -.5 * (walls.get(0).actualWidth() * (4.5/2)) - (walls.get(1).boxW),
+ 0,0,0, true
+ ));
+
+ 
+  walls.add( new Wall(width*2.5, height*2, 
+ 0,0,0, 
+ .5 * (walls.get(2).actualWidth()), 0, 1.5*width, 
+ 0,270, 0, true) );
+ 
+  walls.add( new Wall(width*2.5, height*2, 
+ 0,0,0, 
+ .5 * (walls.get(2).actualWidth()), 0, -1.5*width, 
+ 0,270, 0, true) );
+ 
+ 
+ walls.add(new Wall(width*5, height*2,
+ 0,0,0,
+ -2  * (walls.get(1).boxW), 0, .5 * (walls.get(0).actualWidth() * (4.5/2)) + (walls.get(1).boxW),
+0,180,0, true
  ));
  
- walls.add(new Wall(width*2, height*3,
+ 
+ 
+  walls.add(new Wall(width*5, height*2,
  0,0,0,
- walls.get(1).actualWidth(),.5*height,-walls.get(0).actualWidth() + width,
- 270,0,0));
+ -4.5*width, 0, -.25*width, 
+ 0,0,0, true
+ ));
+ 
+   walls.add(new Wall(width*5, height*2,
+ 0,0,0,
+ -5*width, 0, .5*width, 
+ 0,180,0, true
+ ));
+ 
+  walls.add(new Wall(width*5, height*2,
+ 0,0,0,
+ 4.5*width, 0, -.5*width, 
+ 0,0,0, true
+ ));
+ 
+   walls.add(new Wall(width*5, height*2,
+ 0,0,0,
+ 4*width, 0, .25*width, 
+ 0,180,0, true
+ ));
+ 
+   walls.add(new Wall(width*8, width*8,
+ 0,0,0,
+ 0, -1.6*height, 0, 
+ 90,0,0, false
+ ));
+ 
  
  //walls.add( new Wall(width, height*2, 0,0,0, 0, 0, (numOfBoxes-2) * -walls.get(0).boxW, 0,0, 0) );
  
@@ -121,6 +198,7 @@ void draw() {
   
       int value = int(fft.getAvg(p)*-5.6);
       walls.get(i).setZ(int(whichP), value);
+      
 }
     
     
@@ -134,7 +212,13 @@ void draw() {
   } else {
     
      if (client.available()) {
-    canvas = client.getGraphics(canvas);
+    canvas2 = client.getGraphics(canvas2);
+    
+    canvas.beginDraw();
+    
+   
+    canvas.image(canvas2,0,0,canvas.width, canvas.height);
+    
     //image(canvas, 0, 0, canvas.width, canvas.height);    
     println(canvas.width + " " + canvas.height);
   justStarted=false;  
@@ -148,9 +232,24 @@ void draw() {
 void getImage() {
   
     if (client.available()) {
-    canvas = client.getGraphics(canvas);
-    //image(canvas, 0, 0, canvas.width, canvas.height);    
-   // println(canvas.width + " " + canvas.height);  
+    //canvas = client.getGraphics(canvas);
+    
+   
+     canvas2 = client.getGraphics(canvas2);
+    
+    canvas.beginDraw();
+    
+
+    
+    canvas.image(canvas2,0,0,canvas.width, canvas.height);
+    
+    
+    
+    
+    
+    
+   canvas.endDraw();
+   
 } 
   
 }
@@ -165,15 +264,15 @@ void movieEvent(Movie m) {
 void keyPressed() {
  if (key == CODED) {
     if (keyCode == UP) {
-     cam.move(-30,0); 
+     cam.move(-100,0); 
       
     } else if (keyCode==DOWN) {
-     cam.move(30,0); 
+     cam.move(100,0); 
     } else if (keyCode==LEFT) {
-      println("ahhhh");
-     cam.move(0,-30); 
+      
+     cam.move(0,-100); 
     } else if (keyCode==RIGHT) {
-      cam.move(0,30); 
+      cam.move(0,100); 
     }
   
   

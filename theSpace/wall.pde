@@ -9,7 +9,11 @@ class Wall {
   
   float xPos, yPos, zPos, xRot, yRot, zRot, wid, hei;
   
-   Wall(float w, float h, float xx, float yy, float zz, float xxx, float yyy, float zzz, float rr, float rrr, float rrrr) {
+  float rectX, rectZ, rectX2, rectZ2;
+  
+  boolean isWall = false;
+  
+   Wall(float w, float h, float xx, float yy, float zz, float xxx, float yyy, float zzz, float rrr,float rr, float rrrr, boolean isAWall) {
       println(numOfBoxes);  
      xPos = xxx;
      yPos = yyy;
@@ -23,8 +27,32 @@ class Wall {
      wid = w;
      hei = h;
      
+     isWall = isAWall;
+     
+     
+     
+     
      boxW = wid/numOfBoxes;
       boxH = hei/numOfBoxes;
+      
+      
+       rectX = 0;
+     rectZ = 0;
+     
+     
+     rectX += xPos;
+     rectZ += zPos;
+     
+     rectX2 = rectX;
+     rectZ2 = rectZ;
+     
+     rectX += cos(radians(yRot)) * ((numOfBoxes - 2)/2 * boxW);
+     rectX2 -= cos(radians(yRot)) * ((numOfBoxes - 2)/2 * boxW);
+     
+     rectZ += sin(radians(yRot)) * ((numOfBoxes - 2)/2 * boxW);
+     rectZ2 -= sin(radians(yRot)) * ((numOfBoxes - 2)/2 * boxW);
+      
+      
      int pId = 0;
      while(yy<hei+1) {
        
@@ -61,8 +89,8 @@ class Wall {
        
       
        
-      println(i%numOfBoxes);
-       println(points.size());
+     // println(i%numOfBoxes);
+      // println(points.size());
      }
       
            
@@ -78,15 +106,16 @@ class Wall {
   
   
   float actualWidth() {
-    float w = (numOfBoxes-1) * boxW;
+    float w = (numOfBoxes-2) * boxW;
    return w;
   }
   
   void display() {
     pushMatrix();
     translate(xPos, yPos, zPos);
-    rotateY(radians(yRot));
+    
     rotateX(radians(xRot));
+    rotateY(radians(yRot));
     rotateZ(radians(zRot));
 
    for (int i = 0; i < boxes.size()-1; i++) {
@@ -95,6 +124,15 @@ class Wall {
    
    popMatrix();
    
+   
+//  stroke(255,255,255);  //visualize positioning of walls
+//  strokeWeight(5);
+//   beginShape();
+//   vertex(rectX,height,rectZ);
+//   vertex(rectX2,height, rectZ2);
+//   vertex(rectX2, height , rectZ2);
+//   endShape();
+    
   
    
   }
@@ -131,7 +169,7 @@ void setZ(int which, float value) {
   }
   for (int i = 0; i<4;i++) {
     bb.point.get(i).newZ = value;    
-    
+    bb.point.get(i).z = lerp(bb.point.get(i).z, value,.09);
   }
 
 

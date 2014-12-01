@@ -6,7 +6,7 @@ class Box {
    Box(ArrayList<Point> ps, int idd) {
     id = idd;
      point = ps;
-     println(point);
+     //println(point);
     
     
    } 
@@ -16,6 +16,7 @@ class Box {
     
     void display() {
        beginShape();
+       
        
        texture(canvas);
        

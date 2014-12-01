@@ -12,8 +12,8 @@ class Point {
       z = zz;
       newZ = z;
       parent = p;
-      movieX = (x/parent.wid) * importWidth;
-      movieY = (y/parent.hei) * importHeight;
+      movieX = (x/parent.wid) * canvas.width;
+      movieY = (y/parent.hei) * canvas.height;
       id = idd;
       
       x = x - (parent.wid/2);
@@ -33,10 +33,9 @@ class Point {
      if (stayInPlace) {
       z=0; 
      } else {
-      if (newZ>z) {
-     z = lerp(z,newZ,.1);
+      
+     z = lerp(z,newZ,.05);
      
-   }
     } 
     }
   
