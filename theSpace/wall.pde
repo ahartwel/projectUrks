@@ -70,6 +70,9 @@ class Wall {
        pId++;
      }
      
+     
+     
+     
      xx=0;
      yy=0;
      
@@ -93,8 +96,14 @@ class Wall {
       // println(points.size());
      }
       
+      
+             ArrayList<Point> ps = new ArrayList<Point>();
+       ps.add( points.get(points.size()-1) );
+       ps.add( points.get(points.size()-2) );
+       ps.add( points.get(int(points.size()-numOfBoxes)) );
+       ps.add( points.get(int(points.size()-numOfBoxes+1)) );
            
-           
+           boxes.add(new Box(ps, boxes.size())); 
       
      
      
@@ -167,9 +176,18 @@ void setZ(int which, float value) {
    whichP=0; 
   }
   }
+  
+  if(isWall==false) {
+   value= value*2.5; 
+  }
+  
   for (int i = 0; i<4;i++) {
-    bb.point.get(i).newZ = value;    
+    bb.point.get(i).newZ = value;  
+  
+  if (value>bb.point.get(i).newZ) {  
     bb.point.get(i).z = lerp(bb.point.get(i).z, value,.09);
+  }
+  
   }
 
 

@@ -12,6 +12,8 @@ import ddf.minim.*;
   float boxW;
   float boxH;
 PImage cement;
+PImage bob;
+PImage theDead;
  SyphonClient client;
   PGraphics canvas, canvas2, cementGrid;
    
@@ -39,6 +41,10 @@ Wall theWall, wall2, wall3, ceiling;
 void setup() {
  size(1600,1024,P3D);
 background(0);
+  
+  
+  bob = loadImage("bob.png");
+  theDead = loadImage("theDead.png");
   
   cement = loadImage("cement.jpeg");
   
@@ -137,11 +143,39 @@ cementGrid = createGraphics(300,500, P3D);
  0,180,0, true
  ));
  
-   walls.add(new Wall(width*8, width*8,
+   walls.add(new Wall(width*6.5, width*8,
  0,0,0,
- 0, -1.6*height, 0, 
+ -.15*width, -1.27*height, 0, 
  90,0,0, false
  ));
+ 
+ 
+ 
+    walls.add(new Wall(width*5, width*2,
+ 0,0,0,
+ -5 * width, -1.27*height, 0, 
+ 90,0,0, false
+ ));
+ 
+ 
+     walls.add(new Wall(width*5, width*2,
+ 0,0,0,
+ 4.5 * width, -1.27*height, 0, 
+ 90,0,0, false
+ ));
+ 
+ 
+  walls.add( new Wall(width*1.2, height*2, //left wall 
+ 0,0,0, 
+ -6.5*width, 0, .2*width, 
+ 0,90, 0, true) );
+ 
+
+ 
+  walls.add( new Wall(width*1.2, height*2, //left wall 
+ 0,0,0, 
+ 5*width, 0, 0, 
+ 0,90, 0, true) );
  
  
  //walls.add( new Wall(width, height*2, 0,0,0, 0, 0, (numOfBoxes-2) * -walls.get(0).boxW, 0,0, 0) );
@@ -172,7 +206,12 @@ void draw() {
   
   if (justStarted==false) {
     getImage();
-  background(0,0,0);
+    
+    
+    
+  background(50,40,40);
+   //image(canvas,0,0, width, height);
+ 
  //lights();
  //directionalLight(230,255,230,0,1,0);
  //directionalLight(230,255,230,0,-1,0);
@@ -204,10 +243,11 @@ void draw() {
     
   }
   
-  
-
-  
- 
+    
+      pushMatrix();
+      translate(0,0,-2 * width);
+    image(theDead, -.5 * theDead.width - (.25*width),-.2 * height, 2*theDead.width, 2*theDead.height);
+ popMatrix();
  
   } else {
     
